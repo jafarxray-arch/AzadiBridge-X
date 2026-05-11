@@ -4,8 +4,8 @@
 
 **Universal Media Download Tool | ابزار جهانی دانلود مدیا**
 
-[![Stars](https://img.shields.io/github/stars/bluelife/CloudBridge?style=social)](https://github.com/YOUR_USERNAME/CloudBridge)
-[![Forks](https://img.shields.io/github/forks/bluelife/CloudBridge?style=social)](https://github.com/YOUR_USERNAME/CloudBridge)
+[![Stars](https://img.shields.io/github/stars/bluelifemmd2007-cell/CloudBridge?style=social)](https://github.com/YOUR_USERNAME/CloudBridge)
+[![Forks](https://img.shields.io/github/forks/bluelifemmd2007-cell/CloudBridge?style=social)](https://github.com/YOUR_USERNAME/CloudBridge)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 </div>
