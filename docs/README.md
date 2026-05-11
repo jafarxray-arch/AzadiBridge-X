@@ -7,7 +7,7 @@
 [![Stars](https://img.shields.io/badge/⭐-Star_This_Project-blue)](https://https://github.com/bluelifemmd2007-cell)
 
 </div>
-
+این ساختار قانونیه از روی فضا های ازاد گیت هاب نوشته شده
 ## 🚀 30 ثانیه تا دانلود
 
 1. این ریپو را **Fork** کن
