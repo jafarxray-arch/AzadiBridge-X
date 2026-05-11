@@ -1,29 +1,67 @@
-# 🤝 راهنمای مشارکت
-
-## هر کسی می‌تواند کمک کند
-
-### 🐛 گزارش باگ
-1. برو به [Issues](https://github.com/YOUR_USERNAME/AzadiBridge/issues)
-2. روی **New Issue** کلیک کن
-3. عنوان: خلاصه مشکل
-4. توضیح: لینک + خطا + اسکرین‌شات
-
-### 💡 پیشنهاد قابلیت
-Issues → New Issue → برچسب `enhancement`
-
-### 🔧 مشارکت در کد
-Fork → تغییرات → Pull Request
-
-### 📝 بهبود مستندات
-اشکالات املایی یا اضافه کردن مثال
-
-
-در کل قول بررسی داده نمیشه ولی هر چی دیدی بگو رفیق
-
-
-## ⭐ اگر نمی‌توانی هیچکدام
-ستاره بده و به دوستان معرفی کن
+# 🤝 Contribution Guidelines | راهنمای مشارکت
 
 ---
 
-**Every contribution matters**
+## English | انگلیسی
+
+### 🐛 Reporting Issues
+Please include:
+- Clear description of the problem
+- Steps to reproduce
+- Expected vs actual behavior
+- Error messages or logs
+
+### 💡 Suggesting Features
+Open an issue with the `enhancement` label and describe:
+- What problem does it solve?
+- How would it work technically?
+
+### 🔧 Pull Requests
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### 📝 Code Style
+- Keep it simple and readable
+- Add comments for complex logic
+- Update documentation when needed
+
+### ⚖️ Legal Note
+By contributing, you agree that your code will be licensed under MIT License and that you have the right to submit it.
+
+---
+
+## فارسی | Farsi
+
+### 🐛 گزارش مشکل
+لطفاً شامل موارد زیر باشد:
+- توضیح واضح مشکل
+- مراحل بازتولید مشکل
+- رفتار مورد انتظار در مقابل رفتار واقعی
+- پیام‌های خطا یا لاگ‌ها
+
+### 💡 پیشنهاد قابلیت جدید
+یک Issue با برچسب `enhancement` باز کنید و توضیح دهید:
+- چه مشکلی را حل می‌کند؟
+- از نظر فنی چگونه کار می‌کند؟
+
+### 🔧 درخواست ادغام (Pull Request)
+1. مخزن را فورک کنید
+2. یک شاخه ویژگی بسازید (`git checkout -b feature/amazing-feature`)
+3. تغییرات خود را commit کنید (`git commit -m 'Add amazing feature'`)
+4. به شاخه push کنید (`git push origin feature/amazing-feature`)
+5. یک Pull Request باز کنید
+
+### 📝 سبک کدنویسی
+- ساده و خوانا نگه دارید
+- برای منطق پیچیده کامنت اضافه کنید
+- در صورت نیاز مستندات را به‌روز کنید
+
+### ⚖️ نکته قانونی
+با مشارکت، موافقت می‌کنید که کد شما تحت مجوز MIT منتشر شود و شما حق ارسال آن را دارید.
+
+---
+
+**Thank you for helping make this project better! | ممنون از کمک شما برای بهتر کردن این پروژه!**
