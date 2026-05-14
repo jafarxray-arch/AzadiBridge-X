@@ -1,0 +1,111 @@
+name: 🔪 Split Large File (تقسیم فایل بزرگ)
+on:
+  workflow_dispatch:
+    inputs:
+      file_path:
+        description: 'مسیر فایل داخل مخزن (مثلاً downloads/video.mp4)'
+        required: true
+        type: string
+      chunk_size_mb:
+        description: 'اندازه هر تکه به مگابایت (حداکثر 95 برای گیت‌هاب)'
+        default: '95'
+        type: string
+      output_prefix:
+        description: 'پیشوند فایل‌های خروجی (پیش‌فرض: نام فایل اصلی)'
+        required: false
+        type: string
+
+jobs:
+  split_file:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: 🔍 Check if file exists
+        id: check
+        run: |
+          FILE="${{ github.event.inputs.file_path }}"
+          if [ ! -f "$FILE" ]; then
+            echo "❌ File not found: $FILE"
+            exit 1
+          fi
+          SIZE=$(stat -c%s "$FILE")
+          SIZE_MB=$((SIZE / 1024 / 1024))
+          echo "✅ File found: $FILE (${SIZE_MB} MB)"
+          echo "size_mb=${SIZE_MB}" >> $GITHUB_OUTPUT
+      
+      - name: 🔪 Split file into chunks
+        run: |
+          FILE="${{ github.event.inputs.file_path }}"
+          CHUNK_SIZE="${{ github.event.inputs.chunk_size_mb }}"
+          DIR=$(dirname "$FILE")
+          BASENAME=$(basename "$FILE")
+          PREFIX="${BASENAME%.*}"
+          
+          if [ -n "${{ github.event.inputs.output_prefix }}" ]; then
+            PREFIX="${{ github.event.inputs.output_prefix }}"
+          fi
+          
+          cd "$DIR"
+          
+          echo "🔪 Splitting: $BASENAME"
+          echo "📦 Chunk size: ${CHUNK_SIZE} MB"
+          echo "📁 Output prefix: ${PREFIX}_part_"
+          
+          # Split using split command
+          split -b "${CHUNK_SIZE}M" -d "$BASENAME" "${PREFIX}_part_"
+          
+          # Generate checksums for verification
+          md5sum "${PREFIX}_part_"* > "${PREFIX}_checksums.txt"
+          
+          # Create info file
+          cat > "${PREFIX}_split_info.txt" << EOF
+Original file: $BASENAME
+Original size: $(stat -c%s "$BASENAME") bytes
+Chunk size: ${CHUNK_SIZE} MB
+Number of chunks: $(ls ${PREFIX}_part_* 2>/dev/null | wc -l)
+Split date: $(date)
+Checksum file: ${PREFIX}_checksums.txt
+Merge command: cat ${PREFIX}_part_* > $BASENAME
+EOF
+          
+          echo "✅ Split complete"
+          echo "📋 Chunks: ${PREFIX}_part_00, ${PREFIX}_part_01, ..."
+          echo "🔐 Checksums: ${PREFIX}_checksums.txt"
+          echo "ℹ️ Info: ${PREFIX}_split_info.txt"
+      
+      - name: 📤 Commit and push split parts
+        run: |
+          FILE="${{ github.event.inputs.file_path }}"
+          DIR=$(dirname "$FILE")
+          BASENAME=$(basename "$FILE")
+          PREFIX="${BASENAME%.*}"
+          
+          if [ -n "${{ github.event.inputs.output_prefix }}" ]; then
+            PREFIX="${{ github.event.inputs.output_prefix }}"
+          fi
+          
+          git config user.name "AzadiBridge Splitter"
+          git config user.email "split@azadibridge.local"
+          
+          cd "$DIR"
+          git add "${PREFIX}_part_"* "${PREFIX}_checksums.txt" "${PREFIX}_split_info.txt"
+          git diff --staged --quiet || git commit -m "🔪 Split: $BASENAME into ${CHUNK_SIZE}MB chunks"
+          git push
+          
+          echo "✅ Changes pushed to repository"
+      
+      - name: 📝 Optional: Keep or remove original
+        id: keep_original
+        run: |
+          FILE="${{ github.event.inputs.file_path }}"
+          DIR=$(dirname "$FILE")
+          BASENAME=$(basename "$FILE")
+          
+          echo "⚠️ Original file is still in the repository: $FILE"
+          echo "💡 To remove it, run this workflow again or delete manually"
+          echo "   Or use: git rm $FILE && git commit -m 'Remove original' && git push"
