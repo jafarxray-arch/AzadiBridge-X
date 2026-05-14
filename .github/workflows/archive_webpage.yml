@@ -1,0 +1,63 @@
+name: 📄 Archive Webpage (ذخیره کامل صفحات فیلتر شده)
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'آدرس صفحه وب (مثل ویکی‌پدیا، ساینس دایرکت، خبرگزاری‌ها، وبلاگ‌ها)'
+        required: true
+        type: string
+      wait_time:
+        description: 'زمان انتظار برای لود کامل صفحه (ثانیه)'
+        default: '10'
+        type: string
+      output_folder:
+        description: 'پوشه خروجی'
+        default: 'downloads/archives'
+        type: string
+
+jobs:
+  archive_webpage:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: 🌐 Install Chrome & Selenium
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver
+          pip install selenium webdriver-manager
+      
+      - name: 📸 Archive webpage as MHTML
+        run: |
+          mkdir -p "${{ github.event.inputs.output_folder }}"
+          python scripts/archiver.py \
+            "${{ github.event.inputs.url }}" \
+            "${{ github.event.inputs.output_folder }}" \
+            "${{ github.event.inputs.wait_time }}"
+      
+      - name: 📦 Split if larger than 95MB
+        run: |
+          cd "${{ github.event.inputs.output_folder }}"
+          for file in *.mhtml; do
+            if [ -f "$file" ] && [ $(stat -c%s "$file") -gt 95000000 ]; then
+              bash ../../scripts/splitter.sh "$file"
+              rm "$file"
+            fi
+          done
+      
+      - name: 📤 Commit and push to repository
+        run: |
+          git config user.name "AzadiBridge Archiver"
+          git config user.email "archive@azadibridge.local"
+          git add "${{ github.event.inputs.output_folder }}"
+          git diff --staged --quiet || git commit -m "📄 Archived webpage: ${{ github.event.inputs.url }}"
+          git push
